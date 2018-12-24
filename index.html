@@ -180,8 +180,13 @@
 
       /*背景音乐控制*/
       pauseAudio();
-      document.addEventListener('touchstart', function () {
-        playAudio();
+
+      var audioStart = false;
+      document.addEventListener('touchend', function () {
+        if (!audioStart) {
+          audioStart = true;
+          playAudio();
+        }
       });
       $('.playBtn').click(function () {
         var btnSrc = $('.playBtn').attr("src");
