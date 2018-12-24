@@ -1,80 +1,226 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>恋爱计时器</title>
-    <style>
-        body {
-            -webkit-font-smoothing: antialiased;
-            font-family: Helvetica Neue, Helvetica, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
-            background-image: url('bg.jpg');
-            font-size: 85%;
-            margin: 0;
-        }
-        
-        h2 {
-            font-size: 220%;
-            font-weight: 400;
-        }
-        
-        .content {
-            position: absolute;
-            width: 100%;
-            top: 40%;
-            transform: translate(0, -50%);
-            text-align: center;
-        }
-        
-        .timer {
-            font-size: 180%;
-            line-height: 1.5;
-            margin: 1em 0;
-        }
-        
-        .timer b {
-            color: rgb(253, 99, 125);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Deep Breath</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      text-decoration: none;
+    }
+
+    html {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      height: 100%;
+      width: 100%;
+      background: url("assets/images/bg.jpg") no-repeat 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: center;
+      overflow: hidden;
+    }
+
+    .content {
+      margin:-400px 200px 0px 0px;
+      position: absolute;
+    }
+
+    .musicBox {
+      height: 560px;
+      width: 560px;
+      background: url("assets/images/tune.png") no-repeat center;
+      position: absolute;
+    }
+
+    .musicPanel {
+      height: 550px;
+      width: 550px;
+      margin: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url("assets/images/star-tail.png") no-repeat center, url("assets/images/round.png") no-repeat center;
+      animation: rolling 5s infinite linear;
+    }
+
+    .paused {
+      animation-play-state: paused;
+    }
+
+    @keyframes rolling {
+      from {
+        transform: rotate(0deg);
+        transform-origin: 50% 50%;
+      }
+
+      to {
+        transform: rotate(360deg);
+        transform-origin: 50% 50%;
+      }
+    }
+
+    .musicDisc {
+      height: 200px;
+      width: 200px;
+      border-radius: 50%;
+      background: url("assets/images/disc2.JPG") center no-repeat;
+      background-size: cover;
+    }
+
+    .musicInfo {
+      width: 200px;
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      margin-left: -100px;
+    }
+
+    .musicInfo p {
+      text-align: center;
+    }
+
+    .musicInfo .song {
+      color: #34f8f9;
+      font-size: 18px;
+    }
+
+    .musicInfo .singer {
+      color: white;
+    }
+
+    .musicControl img {
+      height: 40px;
+      width: 40px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -20px;
+    }
+
+    .musicShare {
+      width: 100px;
+      display: flex;
+      justify-content: space-around;
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      margin-left: -45px;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="content">
-        <h2>呆呆，我们已经在一起了</h2>
-        <div class="timer">
-            <b id="d"></b> Days <b id="h"></b> Hours <b id="m"></b> Minutes <b id="s"></b> Seconds
-        </div>
+  <div class="content">
+    <h2 style="font-size: 35pt;">We are together</h2>
+    <div class="timer" style="font-size: 25pt;">
+      <b id="d"></b> Days <b id="h"></b> Hours <b id="m"></b> Minutes <b id="s"></b> Seconds
     </div>
+  </div>
 
-    <script>
-        function timer() {
-            var start = new Date(2013, 12, 1); // 2015.7.2
-            var t = new Date() - start;
-            var h = ~~(t / 1000 / 60 / 60 % 24);
-            if (h < 10) {
-                h = "0" + h;
-            }
-            var m = ~~(t / 1000 / 60 % 60);
-            if (m < 10) {
-                m = "0" + m;
-            }
+  <div class="musicBox">
+    <audio autoplay loop>
+      <source src="assets/audios/yourname.mp3">
+    </audio>
+    <div class="musicPanel">
+      <div class="musicDisc">
+      </div>
+    </div>
+    <div class="musicInfo">
+      <p class="song">君の名は</p>
+      <p class="singer">熊子</p>
+    </div>
+    <div class="musicControl">
+      <img src="assets/images/play.png" class="playBtn">
+    </div>
+  </div>
 
-            var s = ~~(t / 1000 % 60);
-            if (s < 10) {
-                s = "0" + s;
-            }
-            document.getElementById('d').innerHTML = ~~(t / 1000 / 60 / 60 / 24);
-            document.getElementById('h').innerHTML = h;
-            document.getElementById('m').innerHTML = m;
-            document.getElementById('s').innerHTML = s;
+
+  <script src="libs/jquery-3.3.1.min.js"></script>
+  <script src="libs/starShower.js"></script>
+  <script>
+    function playAudio() {
+      btnSrc = "assets/images/pause.png";
+      $('.playBtn').attr("src", btnSrc);
+      $('.musicPanel').removeClass("paused");
+      $("audio").get(0).play();
+    }
+
+    function pauseAudio() {
+      btnSrc = "assets/images/play.png";
+      $('.playBtn').attr("src", btnSrc);
+      $('.musicPanel').addClass("paused");
+      $("audio").get(0).pause();
+    }
+
+    $(function () {
+
+      /*流星雨代码开始*/
+      var images = [
+        'assets/images/lx/lx_1.png',
+        'assets/images/lx/lx_2.png',
+        'assets/images/lx/lx_3.png',
+        'assets/images/lx/lx_4.png',
+        'assets/images/lx/lx_5.png',
+        'assets/images/lx/lx_6.png',
+        'assets/images/lx/lx_7.png',
+      ];
+      meteorShowers.option(images);//配置流星雨传入流星图片数组
+      meteorShowers.start();//开始流星雨
+      // meteorShowers.stop();//停止流星雨
+      // meteorShowers.end();//结束流星雨
+      /*流星雨代码结束*/
+
+      /*背景音乐控制*/
+      pauseAudio();
+      document.addEventListener('touchstart', function () {
+        playAudio();
+      });
+      $('.playBtn').click(function () {
+        var btnSrc = $('.playBtn').attr("src");
+        if (btnSrc == "assets/images/play.png") {
+          playAudio();
+        } else {
+          pauseAudio();
         }
-        timer();
-        setInterval(timer, 1000);
-    </script>
+      });
+      /*背景音乐控制*/
+
+    })
+  </script>
+  <script>
+    // 计时器
+    function timer() {
+      var start = new Date(2018, 9, 24);
+      var t = new Date() - start;
+      var h = ~~(t / 1000 / 60 / 60 % 24);
+      if (h < 10) {
+        h = "0" + h;
+      }
+      var m = ~~(t / 1000 / 60 % 60);
+      if (m < 10) {
+        m = "0" + m;
+      }
+
+      var s = ~~(t / 1000 % 60);
+      if (s < 10) {
+        s = "0" + s;
+      }
+      document.getElementById('d').innerHTML = ~~(t / 1000 / 60 / 60 / 24);
+      document.getElementById('h').innerHTML = h;
+      document.getElementById('m').innerHTML = m;
+      document.getElementById('s').innerHTML = s;
+    }
+    timer();
+    setInterval(timer, 1000);
+  </script>
 </body>
 
 </html>
